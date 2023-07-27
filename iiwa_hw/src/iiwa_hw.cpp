@@ -30,7 +30,7 @@
 
 #include <pluginlib/class_list_macros.hpp>
 
-#include "iiwa_hw/iiwa_hw.hpp"
+#include "iiwa_hw.hpp"
 #include <iiwa_ros/conversions.hpp>
 
 namespace iiwa_hw {
@@ -48,12 +48,14 @@ void HardwareInterface::setFrequency(double frequency) {
 bool HardwareInterface::init(ros::NodeHandle& /*unused*/, ros::NodeHandle &robot_hw_nh) {
 
   robot_hw_nh.param("hardware_interface", interface_, std::string("PositionJointInterface"));
+  // robot_hw_nh.param("hardware_interface", interface_, std::string("PosVelAccJointInterface"));
   robot_hw_nh.param("robot_name", robot_name_, std::string("iiwa"));
 
   // Initialize Publishers and Subscribers from iiwa_ros.
   joint_position_state_.init(robot_name_);
   joint_torque_state_.init(robot_name_);
   joint_position_command_.init(robot_name_);
+  joint_position_velocity_command_.init(robot_name_);
 
   if (ros::param::get("joints", device_->joint_names)) {
     if (!(device_->joint_names.size() == IIWA_JOINTS)) {
@@ -104,16 +106,23 @@ bool HardwareInterface::init(ros::NodeHandle& /*unused*/, ros::NodeHandle &robot
         state_interface_.getHandle(device_->joint_names[i]), &device_->joint_effort_command[i]);
     effort_interface_.registerHandle(joint_handle);
 
+    // Position Velocity command handle.
+    hardware_interface::PosVelAccJointHandle position_velocity_joint_handle = hardware_interface::PosVelAccJointHandle(
+        state_interface_.getHandle(device_->joint_names[i]), &device_->joint_position_command[i], &device_->joint_velocity_command[i],
+        &device_->joint_acceleration_command[i]);
+    position_velocity_interface_.registerHandle(position_velocity_joint_handle);
+
     registerJointLimits(device_->joint_names[i], joint_handle, &urdf_model_, device_->joint_lower_limits[i],
                         device_->joint_upper_limits[i], device_->joint_effort_limits[i]);
   }
 
-  ROS_INFO("Registering state and effort interfaces");
+  ROS_INFO("Registering state, effort and position_velocity interfaces");
 
   // Register ros-controls interfaces.
   this->registerInterface(&state_interface_);
   this->registerInterface(&effort_interface_);
   this->registerInterface(&position_interface_);
+  this->registerInterface(&position_velocity_interface_);
 
   return true;
 }
@@ -221,11 +230,24 @@ void HardwareInterface::write(const ros::Time &time, const ros::Duration &period
     }
     // Joint Impedance Control.
     else if (interface_ == interface_type_.at(1)) {
-      // TODO
+      ROS_INFO_STREAM("Not Implemented");
     }
     // Joint Velocity Control.
     else if (interface_ == interface_type_.at(2)) {
-      // TODO
+      ROS_INFO_STREAM("Not Implemented");
+    }
+    // Joint Position Velocity Controller
+    else if (interface_ == interface_type_.at(3)) {
+      if (device_->joint_position_command == last_joint_position_command_) { return; }
+      last_joint_position_command_ = device_->joint_position_command;
+
+      // Building the message
+      auto command_pos = iiwa_ros::conversions::jointQuantityFromVector<double>(device_->joint_position_command);
+      auto command_vel = iiwa_ros::conversions::jointQuantityFromVector<double>(device_->joint_velocity_command);
+      command_joint_position_velocity_.position = command_pos;
+      command_joint_position_velocity_.velocity = command_vel;
+      command_joint_position_velocity_.header.stamp = ros::Time::now();
+      joint_position_velocity_command_.setPosition(command_joint_position_velocity_);
     }
   } else if (delta.toSec() >= 10) {
     ROS_INFO_STREAM("No LBR IIWA is connected. Waiting for the robot to connect before writing ...");

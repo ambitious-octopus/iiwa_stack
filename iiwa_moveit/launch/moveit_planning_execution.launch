@@ -2,26 +2,26 @@
 <launch>
     <!-- The planning and execution components of MoveIt! configured to run -->
     <!-- using the ROS-Industrial interface. -->
-    
+
     <!-- | 		PARAMETERS  		| -->
     <!-- the "sim" argument controls whether we connect to a Simulated or Real robot. -->
     <arg name="sim" default="true" doc="If true, the robot will be simulated in Gazebo" />
-    <!-- hardware_interface to use : PositionJointInterface, EffortJointInterface, VelocityJointInterface. -->
+    <!-- hardware_interface to use : PositionJointInterface, EffortJointInterface, VelocityJointInterface, PosVelJointInterface -->
     <arg name="hardware_interface" default="PositionJointInterface"/>
     <!-- The is gonna have its nodes/topics under a namespace with the same name. -->
     <arg name="robot_name" default="iiwa"/>
     <!-- Model of the iiwa to use : iiwa7, iiwa14 -->
     <arg name="model" default="iiwa7"/>
     <arg name="rviz" default="true" />
-    
-    <remap from="/$(arg hardware_interface)_trajectory_controller/follow_joint_trajectory" 
+
+    <remap from="/$(arg hardware_interface)_trajectory_controller/follow_joint_trajectory"
            to="/$(arg robot_name)/$(arg hardware_interface)_trajectory_controller/follow_joint_trajectory" />
-    <remap from="robot_description" to="/$(arg robot_name)/robot_description" /> 
-    <remap from="/get_planning_scene" to="/$(arg robot_name)/get_planning_scene" /> 
-    
+    <remap from="robot_description" to="/$(arg robot_name)/robot_description" />
+    <remap from="/get_planning_scene" to="/$(arg robot_name)/get_planning_scene" />
+
     <!-- Run the robot within a Gazebo simulation. -->
     <group if="$(arg sim)">
-        
+
         <!-- Load Gazebo with given values -->
         <include file="$(find iiwa_gazebo)/launch/iiwa_gazebo.launch">
             <arg name="hardware_interface" value="$(arg hardware_interface)"/>
@@ -29,10 +29,11 @@
             <arg name="model" value="$(arg model)"/>
         </include>
     </group>
-    
+
     <!-- Working with the real robot.  -->
+<!--    XML is <rosparam file="$(find iiwa_moveit)/config/$(arg hardware_interface)_controllers.yaml"/>-->
     <group ns="$(arg robot_name)" unless="$(arg sim)">
-        
+
         <!-- Load controllers accordingly to parameters -->
         <include file="$(find iiwa_control)/launch/iiwa_control.launch">
             <arg name="hardware_interface" value="$(arg hardware_interface)" />
@@ -40,14 +41,14 @@
             <arg name="robot_name" value="$(arg robot_name)" />
             <arg name="model" value="$(arg model)" />
         </include>
-        
+
         <!-- Robot interface -->
         <include file="$(find iiwa_hw)/launch/iiwa_hw.launch" >
             <arg name="hardware_interface" value="$(arg hardware_interface)" />
         </include>
-        
+
     </group>
-    
+
     <!-- Load move_group -->
     <group ns="$(arg robot_name)">
         <include file="$(find iiwa_moveit)/launch/move_group.launch">
@@ -56,10 +57,33 @@
             <arg name="robot_name" value="$(arg robot_name)"/>
             <arg name="model" value="$(arg model)" />
         </include>
-        
+
         <include if="$(arg rviz)" file="$(find iiwa_moveit)/launch/moveit_rviz.launch">
             <arg name="config" value="true"/>
         </include>
     </group>
-    
+
+    <!--
+    static_transform_publisher x y z qx qy qz qw frame_id child_frame_id  period_in_ms
+    -->
+
+
+<!---
+manual transformation that seems to improve pcds
+datas[0].translate((0.03, 0.03, 0.0))
+datas[1].translate((-0.017, 0.02, 0.0))
+datas[2].translate((0.0, 0.0, 0.0))
+-->
+
+<!--Old ones-->
+<!--    <node pkg="tf2_ros" type="static_transform_publisher" name="robot_to_cam1" args=" 0.052 0.3512 0.1260 -0.003921 -0.0055835 -0.2078908 0.9781282 world camera1_link"/>-->
+<!--    <node pkg="tf2_ros" type="static_transform_publisher" name="robot_to_cam2" args=" 0.0315 -0.2633 0.1075  0.0281139 -0.0006453 0.2056318 0.9782253 world camera2_link"/>-->
+<!--&lt;!&ndash;    <node pkg="tf2_ros" type="static_transform_publisher" name="robot_to_cam3" args=" 1.2087 -0.0285 0.5876 -0.3487352 -0.1087664 -0.8906456 0.2707472 world camera3_link"/>&ndash;&gt;-->
+<!--    <node pkg="tf2_ros" type="static_transform_publisher" name="robot_to_cam3" args=" 1.209 -0.029 0.588 -0.365 0.005 0.931 -0.006 world camera3_link"/>-->
+
+
+<node pkg="tf2_ros" type="static_transform_publisher" name="robot_to_cam1" args="0.04 0.34 0.115  -0.001396759994438732 -0.011291839955040994 -0.19849015920970206 0.980036836097937 world camera1_link" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="robot_to_cam2" args="0.02 -0.29 0.115  0.0242256400615195 -0.00445900001132332 0.21658655055000808 0.9759526124783713 world camera2_link" />
+<node pkg="tf2_ros" type="static_transform_publisher" name="tool_to_cam3" args="0.0249431 0.0730293  -0.0533813  0.51054377  0.4785885  0.52570974 -0.4836604  tool_link_ee camera3_link" />
+
 </launch>

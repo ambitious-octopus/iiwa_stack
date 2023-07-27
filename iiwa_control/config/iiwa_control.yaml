@@ -2,12 +2,12 @@
   # Publish all joint states -----------------------------------
   joint_state_controller:
     type: joint_state_controller/JointStateController
-    publish_rate: 50  
-  
+    publish_rate: 50
+
   # Controllers for singular joint ------------------------------------
-  # 
+  #
   # Effort Position Controllers ---------------------------------------
-  
+
   # VALUES ARE NOT CORRECT !
   EffortJointInterface_J1_controller:
     type: effort_controllers/JointPositionController
@@ -52,63 +52,63 @@
   PositionJointInterface_J2_controller:
     type: position_controllers/JointPositionController
     joint: iiwa_joint_2
-    
+
   PositionJointInterface_J3_controller:
     type: position_controllers/JointPositionController
     joint: iiwa_joint_3
-    
+
   PositionJointInterface_J4_controller:
     type: position_controllers/JointPositionController
     joint: iiwa_joint_4
-    
+
   PositionJointInterface_J5_controller:
     type: position_controllers/JointPositionController
     joint: iiwa_joint_5
-    
+
   PositionJointInterface_J6_controller:
     type: position_controllers/JointPositionController
     joint: iiwa_joint_6
-    
+
   PositionJointInterface_J7_controller:
     type: position_controllers/JointPositionController
     joint: iiwa_joint_7
-    
+
   # Forward Velocity Controllers ---------------------------------------
   VelocityJointInterface_J1_controller:
     type: velocity_controllers/JointVelocityController
     joint: iiwa_joint_1
-    
+
   VelocityJointInterface_J2_controller:
     type: velocity_controllers/JointVelocityController
     joint: iiwa_joint_2
-    
+
   VelocityJointInterface_J3_controller:
     type: velocity_controllers/JointVelocityController
     joint: iiwa_joint_3
-    
+
   VelocityJointInterface_J4_controller:
     type: velocity_controllers/JointVelocityController
     joint: iiwa_joint_4
-    
+
   VelocityJointInterface_J5_controller:
     type: velocity_controllers/JointVelocityController
     joint: iiwa_joint_5
-    
+
   VelocityJointInterface_J6_controller:
     type: velocity_controllers/JointVelocityController
     joint: iiwa_joint_6
-    
+
   VelocityJointInterface_J7_controller:
     type: velocity_controllers/JointVelocityController
     joint: iiwa_joint_7
-    
-    
+
+
   # Trajectory Controllers ---------------------------------------
-  #   
+  #
   # Effort Position Controllers ---------------------------------------
   EffortJointInterface_trajectory_controller:
     type: effort_controllers/JointTrajectoryController
-    joints: 
+    joints:
       - iiwa_joint_1
       - iiwa_joint_2
       - iiwa_joint_3
@@ -116,7 +116,7 @@
       - iiwa_joint_5
       - iiwa_joint_6
       - iiwa_joint_7
-      
+
       # VALUES ARE NOT CORRECT !
     gains:
       iiwa_joint_1: {p: 500,  d: 30, i: 15, i_clamp: 30}
@@ -133,11 +133,11 @@
     state_publish_rate:  25            # Override default
     action_monitor_rate: 30            # Override default
     stop_trajectory_duration: 0        # Override default
-    
+
   # Forward Position Controllers ---------------------------------------
   PositionJointInterface_trajectory_controller:
     type: position_controllers/JointTrajectoryController
-    joints: 
+    joints:
       - iiwa_joint_1
       - iiwa_joint_2
       - iiwa_joint_3
@@ -152,11 +152,11 @@
     state_publish_rate:  25            # Override default
     action_monitor_rate: 30            # Override default
     stop_trajectory_duration: 0        # Override default
-    
+
   # Forward Velocity Controllers ---------------------------------------
   VelocityJointInterface_trajectory_controller:
     type: velocity_controllers/JointTrajectoryController
-    joints: 
+    joints:
       - iiwa_joint_1
       - iiwa_joint_2
       - iiwa_joint_3
@@ -164,7 +164,7 @@
       - iiwa_joint_5
       - iiwa_joint_6
       - iiwa_joint_7
-      
+
       # VALUES ARE NOT CORRECT !
     gains:
       iiwa_joint_1: {p: 500,  d: 30, i: 15, i_clamp: 30}
@@ -182,6 +182,21 @@
     action_monitor_rate: 30            # Override default
     stop_trajectory_duration: 0        # Override default
 
+  # Velocity Position Controllers ---------------------------------------
+  PosVelJointInterface_trajectory_controller:
+    type: pos_vel_acc_controllers/JointTrajectoryController
+    joints:
+      - iiwa_joint_1
+      - iiwa_joint_2
+      - iiwa_joint_3
+      - iiwa_joint_4
+      - iiwa_joint_5
+      - iiwa_joint_6
+      - iiwa_joint_7
 
+    constraints:
+      goal_time: 0.5                   # Override default
 
-
+    state_publish_rate:  25            # Override default
+    action_monitor_rate: 30            # Override default
+    stop_trajectory_duration: 0        # Override default

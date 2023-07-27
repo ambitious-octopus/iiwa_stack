@@ -1,39 +1,48 @@
 # joint_limits.yaml allows the dynamics properties specified in the URDF to be overwritten or augmented as needed
 # Specific joint properties can be changed with the keys [max_position, min_position, max_velocity, max_acceleration]
 # Joint limits can be turned off with [has_velocity_limits, has_acceleration_limits]
+
+# Datasheet Max Velocity -> Axis 1: 98, Axis 2: 98, Axis 3: 100, Axis 4: 130, Axis 5: 140, Axis 6: 180, Axis 7: 180 degree/seconds
+# Torque for motor 1: 176 n/m 2: 176 n/m 3: 110 n/m 4: 110 n/m 5: 110 n/m 6: 40 n/m 7: 40 n/m
+
+# Real Acceleration (measure is not fully accurate): Axis 1: 0.25, Axis 2: 0.25, Axis 3: 4, Axis 4: 4, Axis 5: 10, Axis 6: 10, Axis 7: 10
+# info https://answers.ros.org/question/243105/what-are-the-units-in-joint_limitsyaml/
+default_velocity_scaling_factor: 0.5
+default_acceleration_scaling_factor: 0.5
+
 joint_limits:
   iiwa_joint_1:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 1.710422666954443
+    has_acceleration_limits: true
+    max_acceleration: 0.125
   iiwa_joint_2:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 1.710422666954443
+    has_acceleration_limits: true
+    max_acceleration: 0.125
   iiwa_joint_3:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 1.7453292519943295
+    has_acceleration_limits: true
+    max_acceleration: 2
   iiwa_joint_4:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 2.2689280275926285
+    has_acceleration_limits: true
+    max_acceleration: 2
   iiwa_joint_5:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 2.443460952792061
+    has_acceleration_limits: true
+    max_acceleration: 5
   iiwa_joint_6:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 3.141592653589793
+    has_acceleration_limits: true
+    max_acceleration: 5
   iiwa_joint_7:
     has_velocity_limits: true
-    max_velocity: 10
-    has_acceleration_limits: false
-    max_acceleration: 0
+    max_velocity: 3.141592653589793
+    has_acceleration_limits: true
+    max_acceleration: 5
