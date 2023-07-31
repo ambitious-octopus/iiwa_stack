@@ -56,7 +56,7 @@ manipulator:
   enforce_joint_model_state_space: True
   longest_valid_segment_fraction: 0.001 # 0.01 #Our: 0.001
   maximum_waypoint_distance: 0.01 #0.1 #Our: 0.01
-  default_planner_config: SBLkConfigDefault #RRTstarkConfigDefault
+  default_planner_config: ESTkConfigDefault #RRTstarkConfigDefault
   planner_configs:
     - SBLkConfigDefault
     - ESTkConfigDefault
