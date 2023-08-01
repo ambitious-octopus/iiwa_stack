@@ -1,7 +1,7 @@
 # The name of this file shouldn't be changed, or else the Setup Assistant won't detect it
 sensors:
   - sensor_plugin: occupancy_map_monitor/DepthImageOctomapUpdater
-    image_topic: /camera1/aligned_depth_to_color/image_raw
+    image_topic: /throttle_octomap/camera1/aligned_depth_to_color/image_raw
     queue_size: 1
     near_clipping_plane_distance: 0.05
     far_clipping_plane_distance: 1.30
@@ -13,7 +13,7 @@ sensors:
     ns: camera1
 
   - sensor_plugin: occupancy_map_monitor/DepthImageOctomapUpdater
-    image_topic: /camera2/aligned_depth_to_color/image_raw
+    image_topic: /throttle_octomap/camera2/aligned_depth_to_color/image_raw
     queue_size: 1
     near_clipping_plane_distance: 0.05
     far_clipping_plane_distance: 1.30
@@ -24,17 +24,17 @@ sensors:
     filtered_cloud_topic: filtered_cloud
     ns: camera2
 
-#  - sensor_plugin: occupancy_map_monitor/DepthImageOctomapUpdater
-#    image_topic: /camera3/aligned_depth_to_color/image_raw
-#    queue_size: 1
-#    near_clipping_plane_distance: 0.05
-#    far_clipping_plane_distance: 1.30
-#    shadow_threshold: 0.2
-#    padding_scale: 5.0
-#    padding_offset: 0.08
-#    max_update_rate: 1.0
-#    filtered_cloud_topic: filtered_cloud
-#    ns: camera3
+  - sensor_plugin: occupancy_map_monitor/DepthImageOctomapUpdater
+    image_topic: /throttle_octomap/camera3/aligned_depth_to_color/image_raw
+    queue_size: 1
+    near_clipping_plane_distance: 0.05
+    far_clipping_plane_distance: 1.30
+    shadow_threshold: 0.2
+    padding_scale: 5.0
+    padding_offset: 0.08
+    max_update_rate: 1.0
+    filtered_cloud_topic: filtered_cloud
+    ns: camera3
 
 
 
